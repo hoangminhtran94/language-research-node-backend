@@ -9,6 +9,7 @@
  */
 const express = require("express");
 const corsHandler = require("./middleware/cors");
+const errorHandler = require("./middleware/error-handler");
 const bodyParser = require("body-parser");
 const app = express();
 
@@ -17,6 +18,9 @@ app.use(corsHandler);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/vegetable", vegetableRouter);
+
+app.use(errorHandler);
+
 /**
  * Use nodejs file system to read the csv file
  * * Student name: Minh Hoang Tran

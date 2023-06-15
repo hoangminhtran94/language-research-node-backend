@@ -1,4 +1,6 @@
+const { v4 } = require("uuid");
 class VegetableRecord {
+  UUID = v4();
   REF_DATE = new Date(Date.now()).toLocaleDateString();
   DGUID = "";
   type_of_storage = "Cold and common storage";
