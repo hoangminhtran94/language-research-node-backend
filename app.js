@@ -9,9 +9,13 @@
  */
 const express = require("express");
 const corsHandler = require("./middleware/cors");
+const bodyParser = require("body-parser");
 const app = express();
+
 const vegetableRouter = require("./routes/vegetable-route");
 app.use(corsHandler);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/vegetable", vegetableRouter);
 /**
  * Use nodejs file system to read the csv file

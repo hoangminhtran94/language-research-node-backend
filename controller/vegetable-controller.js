@@ -8,14 +8,18 @@ exports.getAll = async (req, res, next) => {
 
 exports.addNewRecord = async (req, res, next) => {
   const data = req.body;
-  const newRecord = new VegetableRecord({
-    geo: data.geo,
-    typeOfProduct: data.typeOfProduct,
-    vector: data,
-    vector,
-    cordinate: data.cordinate,
-    value: data.value,
-  });
+  let newRecord;
+  try {
+    newRecord = new VegetableRecord({
+      geo: data.geo,
+      typeOfProduct: data.typeOfProduct,
+      vector: data.vector,
+      cordinate: data.cordinate,
+      value: +data.value,
+    });
+  } catch (error) {
+    return next(error);
+  }
   try {
     writeRecord(newRecord);
   } catch (error) {
