@@ -1,8 +1,18 @@
 const fs = require("fs");
 
 exports.writeRecord = (newRecord) => {
-  const rawData = fs.readFileSync("../new-record.json");
+  let rawData;
+  try {
+    rawData = fs.readFileSync("../new-record.json");
+  } catch (error) {
+    throw error;
+  }
   const records = JSON.parse(rawData);
   records.push(newRecord);
-  fs.writeFileSync("../new-record.json", JSON.stringify(records));
+
+  try {
+    fs.writeFileSync("../new-record.json", JSON.stringify(records));
+  } catch (error) {
+    throw error;
+  }
 };
