@@ -1,5 +1,6 @@
 const { readCSV } = require("../utils/read-csv");
 const VegetableRecord = require("./../models/vegetable-record");
+const { v4 } = require("uuid");
 const {
   getRecords,
   writeRecord,
@@ -18,11 +19,12 @@ exports.addNewRecord = async (req, res, next) => {
   let newRecord;
   try {
     newRecord = new VegetableRecord({
-      geo: data.geo,
-      typeOfProduct: data.typeOfProduct,
-      vector: data.vector,
-      cordinate: data.cordinate,
-      value: +data.value,
+      UUID: v4(),
+      GEO: data.GEO,
+      type_of_product: data.type_of_product,
+      VECTOR: data.VECTOR,
+      COORDINATE: data.COORDINATE,
+      VALUE: +data.VALUE,
     });
   } catch (error) {
     return next(error);

@@ -1,5 +1,5 @@
 const fs = require("fs");
-
+const VegetableRecord = require("../models/vegetable-record");
 exports.writeRecord = (newRecord) => {
   let rawData;
   try {
@@ -56,7 +56,7 @@ exports.updateARecord = (UUID, newData) => {
   if (!currentRecord) {
     throw new Error("Not found!");
   }
-  const updatedRecord = [...currentRecord, ...newData];
+  const updatedRecord = new VegetableRecord({ ...currentRecord, ...newData });
   records[currentRecordIndex] = updatedRecord;
   try {
     fs.writeFileSync("./new-record.json", JSON.stringify(records));
