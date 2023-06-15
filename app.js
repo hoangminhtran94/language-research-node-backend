@@ -7,12 +7,12 @@
 /**
  * Import fs package from node
  */
-const fs = require("fs");
 const express = require("express");
+const corsHandler = require("./middleware/cors");
 const app = express();
-const { readCSV } = require("./utils/read-csv");
-
-readCSV("./32100260.csv").then((res) => console.log(res));
+const vegetableRouter = require("./routes/vegetable-route");
+app.use(corsHandler);
+app.use("/api/vegetable", vegetableRouter);
 /**
  * Use nodejs file system to read the csv file
  * * Student name: Minh Hoang Tran
