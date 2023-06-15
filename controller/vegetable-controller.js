@@ -1,6 +1,7 @@
 const { readCSV } = require("../utils/read-csv");
 const VegetableRecord = require("./../models/vegetable-record");
 const {
+  getRecords,
   writeRecord,
   getARecord,
   updateARecord,
@@ -34,7 +35,7 @@ exports.addNewRecord = async (req, res, next) => {
   return res.json(newRecord).status(201);
 };
 
-exports.getNewRecords = async (req, res, next) => {
+exports.getRecord = async (req, res, next) => {
   const { recordId } = req.params;
   let record;
   try {
@@ -43,4 +44,35 @@ exports.getNewRecords = async (req, res, next) => {
     return next(error);
   }
   return res.json(record);
+};
+
+exports.getNewRecords = async (req, res, next) => {
+  try {
+    return res.json(getRecords()).status(201);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+exports.updateRecord = async (req, res, next) => {
+  const { recordId } = req.params;
+  const newData = req.body;
+  let updatedRecord;
+  try {
+    updatedRecord = updateARecord(recordId, newData);
+  } catch (error) {
+    return next(error);
+  }
+  return res.json(updatedRecord).status(201);
+};
+
+exports.deleteRecord = async (req, res, next) => {
+  const { recordId } = req.params;
+
+  try {
+    deleteARecord(recordId);
+  } catch (error) {
+    next(error);
+  }
+  return res.json({ message: "Success" }).status(201);
 };
