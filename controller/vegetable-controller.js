@@ -1,4 +1,5 @@
 const { readCSV } = require("../utils/read-csv");
+const url = require("url");
 const VegetableRecord = require("./../models/vegetable-record");
 const { v4 } = require("uuid");
 const {
@@ -11,7 +12,22 @@ const {
 
 exports.getAll = async (req, res, next) => {
   const data = await readCSV("./32100260.csv");
-  return res.json(data).status(201);
+  let page = req.query?.page ? +req.query.page : 1;
+  console.log(page);
+  let newdata;
+  try {
+    newdata = getRecords();
+  } catch (error) {
+    newdata = [];
+  }
+  const allRecords = [...newdata, ...data];
+
+  return res
+    .json({
+      records: allRecords.slice((page - 1) * 100, (page - 1) * 100 + 100),
+      recordLength: allRecords.length,
+    })
+    .status(201);
 };
 
 exports.addNewRecord = async (req, res, next) => {

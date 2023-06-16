@@ -24,8 +24,25 @@ exports.readCSV = async (filepath) => {
        * splice the first row from rows, which contains table labels. Remove the `"` and split the string into
        * an array of string using ","
        */
-      const labels = rows.splice(0, 1)[0].replace(/"/g, "").split(",");
-
+      const deletedlabels = rows.splice(0, 1);
+      const labels = [
+        "REF_DATE",
+        "GEO",
+        "DGUID",
+        "type_of_product",
+        "type_of_storage",
+        "UOM",
+        "UOM_ID",
+        "SCALAR_FACTOR",
+        "SCALAR_ID",
+        "VECTOR",
+        "COORDINATE",
+        "VALUE",
+        "STATUS",
+        "SYMBOL",
+        "TERMINATED",
+        "DECIMALS",
+      ];
       /**
        * Loop through all the row data, remove the `"` and split value data using ","
        */
