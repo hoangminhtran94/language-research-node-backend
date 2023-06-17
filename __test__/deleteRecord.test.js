@@ -3,7 +3,7 @@ const { getARecord, deleteARecord } = require("../utils/query-record");
 
 /**
  * Mocks the "getARecord" and "deleteARecord" functions from "../utils/query-record" module.
- * @author Minh Hoang Tran
+ * @author Minh Hoang Tran - 041016957
  */
 jest.mock("../utils/query-record", () => ({
   getARecord: jest.fn(),
@@ -12,7 +12,7 @@ jest.mock("../utils/query-record", () => ({
 
 /**
  * Test suite for the "deleteRecord" function.
- * @author Minh Hoang Tran
+ * @author Minh Hoang Tran - 041016957
  */
 describe("deleteRecord", () => {
   /**
@@ -22,7 +22,7 @@ describe("deleteRecord", () => {
     /**
      * Valid record ID to be used in the test.
      * @type {string}
-     * @author Minh Hoang Tran
+     *@author Minh Hoang Tran - 041016957
      */
     const recordId = "123456";
 
@@ -35,14 +35,14 @@ describe("deleteRecord", () => {
     /**
      * Mock request object.
      * @type {Object}
-     * @author Minh Hoang Tran
+     * @author Minh Hoang Tran - 041016957
      */
     const req = { params: { recordId } };
 
     /**
      * Mock response object with required functions.
      * @type {Object}
-     * @author Minh Hoang Tran
+     * @author Minh Hoang Tran - 041016957
      */
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -70,7 +70,7 @@ describe("deleteRecord", () => {
     /**
      * Non-existent record ID to be used in the test.
      * @type {string}
-     * @author Minh Hoang Tran
+     * @author Minh Hoang Tran - 041016957
      */
     const recordId = "123456";
 
@@ -80,14 +80,14 @@ describe("deleteRecord", () => {
     /**
      * Mock request object.
      * @type {Object}
-     * @author Minh Hoang Tran
+     * @author Minh Hoang Tran - 041016957
      */
     const req = { params: { recordId } };
 
     /**
      * Empty response object.
      * @type {Object}
-     * @author Minh Hoang Tran
+     * @author Minh Hoang Tran - 041016957
      */
     const res = {};
 

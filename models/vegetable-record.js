@@ -36,3 +36,5 @@ class VegetableRecord {
     this.VALUE = VALUE;
   }
 }
+
+module.exports = VegetableRecord;

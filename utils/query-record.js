@@ -45,10 +45,10 @@ Utility function to retrieve all records from a CSV file.
 @returns {Array} - Returns an array of records.
 @throws {Error} - Throws an error if the file read operation fails.
 */
-exports.getRecords = () => {
+exports.getRecords = async () => {
   let records;
   try {
-    records = readCSV(filePath);
+    records = await readCSV(filePath);
   } catch (error) {
     throw error;
   }
