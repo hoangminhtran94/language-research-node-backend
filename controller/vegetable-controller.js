@@ -8,31 +8,52 @@ const {
   deleteARecord,
 } = require("../utils/query-record");
 
+/**
+Controller function to get all vegetable records.
+@author Minh Hoang Tran - 041016957
+@param {Object} req - The request object.
+@param {Object} res - The response object.
+@param {Function} next - The next middleware function.
+@returns {Object} - Returns a JSON response with the vegetable records and record length.
+*/
 exports.getAll = async (req, res, next) => {
+  // Retrieve the requested page from the query parameter, defaulting to 1 if not provided
   let page = req.query?.page ? +req.query.page : 1;
   let records;
   try {
+    // Get all vegetable records
     records = await getRecords();
   } catch (error) {
-    newdata = [];
+    // Handle errors by setting records to an empty array
+    records = [];
   }
 
   if (records) {
-    return res
-      .json({
-        records: records.slice((page - 1) * 100, (page - 1) * 100 + 100),
-        recordLength: records.length,
-      })
-      .status(201);
+    // If records are available, return a JSON response with a subset of records based on the requested page
+    return res.status(201).json({
+      records: records.slice((page - 1) * 100, (page - 1) * 100 + 100),
+      recordLength: records.length,
+    });
   }
-  return res.json({ records: [], recordLength: 0 });
+
+  // If no records are available, return an empty array and record length of 0
+  return res.status(201).json({ records: [], recordLength: 0 });
 };
 
+/**
+
+Controller function to add a new vegetable record.
+@author Minh Hoang Tran - 041016957
+@param {Object} req - The request object.
+@param {Object} res - The response object.
+@param {Function} next - The next middleware function.
+@returns {Object} - Returns a JSON response with the newly added vegetable record.
+*/
 exports.addNewRecord = async (req, res, next) => {
   const data = req.body;
-
   let newRecord;
   try {
+    // Create a new VegetableRecord instance with the provided data
     newRecord = new VegetableRecord({
       REF_DATE: new Date(Date.now()).toLocaleDateString(),
       UUID: v4(),
@@ -43,36 +64,67 @@ exports.addNewRecord = async (req, res, next) => {
       VALUE: +data.VALUE,
     });
   } catch (error) {
+    // If an error occurs while creating the new record, pass it to the error handling middleware
     return next(error);
   }
+
   try {
+    // Write the new record to the data source
     await writeRecord(newRecord);
   } catch (error) {
+    // If an error occurs while writing the record, pass it to the error handling middleware
     return next(error);
   }
-  return res.json(newRecord).status(201);
+
+  // Return a JSON response with the newly added record
+  return res.status(201).json(newRecord);
 };
 
+/**
+
+Controller function to get a specific vegetable record.
+@author Minh Hoang Tran - 041016957
+@param {Object} req - The request object.
+@param {Object} res - The response object.
+@param {Function} next - The next middleware function.
+@returns {Object} - Returns a JSON response with the requested vegetable record.
+*/
 exports.getRecord = async (req, res, next) => {
   const { recordId } = req.params;
   let record;
   try {
+    // Retrieve the requested record by its ID
     record = await getARecord(recordId);
   } catch (error) {
+    // If an error occurs while retrieving the record, pass it to the error handling middleware
     return next(error);
   }
-
-  return res.json(record).status(201);
+  // Return a JSON response with the requested record
+  return res.status(201).json(record);
 };
 
+/**
+
+Controller function to update a specific vegetable record.
+@author Minh Hoang Tran - 041016957
+@param {Object} req - The request object.
+@param {Object} res - The response object.
+@param {Function} next - The next middleware function.
+@returns {Object} - Returns a JSON response with a success message.
+*/
 exports.updateRecord = async (req, res, next) => {
   const { recordId } = req.params;
+  // Retrieve the current record by its ID
   let currentRecord = await getARecord(recordId);
+
   if (!currentRecord) {
+    // If the current record is not found, pass an error to the error handling middleware
     return next(new Error("Not found"));
   }
 
   const newData = req.body;
+
+  // Create an updated record with the provided data
   let updatedRecord = new VegetableRecord({
     UUID: recordId,
     REF_DATE: currentRecord.REF_DATE,
@@ -82,24 +134,46 @@ exports.updateRecord = async (req, res, next) => {
     COORDINATE: newData.COORDINATE,
     VALUE: +newData.VALUE,
   });
+
   try {
+    // Update the record in the data source
     await updateARecord(recordId, updatedRecord);
   } catch (error) {
+    // If an error occurs while updating the record, pass it to the error handling middleware
     return next(error);
   }
-  return res.json({ message: "Success" }).status(201);
+
+  // Return a JSON response with a success message
+  return res.status(201).json({ message: "Success" });
 };
 
+/**
+
+Controller function to delete a specific vegetable record.
+@author Minh Hoang Tran - 041016957
+@param {Object} req - The request object.
+@param {Object} res - The response object.
+@param {Function} next - The next middleware function.
+@returns {Object} - Returns a JSON response with a success message.
+*/
 exports.deleteRecord = async (req, res, next) => {
   const { recordId } = req.params;
+  // Retrieve the current record by its ID
   let currentRecord = await getARecord(recordId);
+
   if (!currentRecord) {
+    // If the current record is not found, pass an error to the error handling middleware
     return next(new Error("Not found"));
   }
+
   try {
+    // Delete the record from the data source
     await deleteARecord(recordId);
   } catch (error) {
+    // If an error occurs while deleting the record, pass it to the error handling middleware
     next(error);
   }
-  return res.json({ message: "Success" }).status(201);
+
+  // Return a JSON response with a success message
+  return res.status(201).json({ message: "Success" });
 };

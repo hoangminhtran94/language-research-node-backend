@@ -18,6 +18,13 @@ const LABELS = [
   "TERMINATED",
   "DECIMALS",
 ];
+/**
+Middleware function to check if the record file exists and create it if necessary.
+@author Minh Hoang Tran - 041016957
+@param {Object} req - The request object.
+@param {Object} res - The response object.
+@param {Function} next - The next middleware function.
+*/
 const checkRecordFile = async (req, res, next) => {
   const filePath = "./new-record.csv";
   try {
@@ -37,9 +44,9 @@ const checkRecordFile = async (req, res, next) => {
       }
     });
   } catch (error) {
+    // If an error occurs, pass it to the error handling middleware
     return next(error);
   }
   next();
 };
-
 module.exports = checkRecordFile;

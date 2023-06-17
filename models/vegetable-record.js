@@ -1,3 +1,6 @@
+/**
+VegetableRecord class representing a vegetable record.
+*/
 class VegetableRecord {
   DGUID = "";
   type_of_storage = "Cold and common storage";
@@ -9,6 +12,12 @@ class VegetableRecord {
   SYMBOL = "";
   TERMINATED = "";
   DECIMALS = 0;
+  /**
+  
+  Creates a new instance of VegetableRecord.
+  @param {Object} data - The data object containing the record properties.
+  @author Minh Hoang Tran - 041016957
+  */
   constructor({
     UUID,
     GEO,
@@ -27,5 +36,3 @@ class VegetableRecord {
     this.VALUE = VALUE;
   }
 }
-
-module.exports = VegetableRecord;

@@ -1,7 +1,14 @@
 const fs = require("fs");
 const { readCSV, csvToRawString } = require("./read-csv");
-
 const filePath = "./new-record.csv";
+
+/**
+
+Utility function to write a record to a CSV file.
+@author Minh Hoang Tran - 041016957
+@param {Object} newRecord - The new record to be written.
+@throws {Error} - Throws an error if the file write operation fails.
+*/
 exports.writeRecord = async (newRecord) => {
   const exitingRecords = fs.readFileSync(filePath, "utf-8");
   const newData = [
@@ -31,6 +38,13 @@ exports.writeRecord = async (newRecord) => {
   }
 };
 
+/**
+
+Utility function to retrieve all records from a CSV file.
+@author Minh Hoang Tran - 041016957
+@returns {Array} - Returns an array of records.
+@throws {Error} - Throws an error if the file read operation fails.
+*/
 exports.getRecords = () => {
   let records;
   try {
@@ -41,6 +55,13 @@ exports.getRecords = () => {
   return records;
 };
 
+/**
+Utility function to retrieve a specific record by its UUID from a CSV file.
+@author Minh Hoang Tran - 041016957
+@param {string} UUID - The UUID of the record to retrieve.
+@returns {Object|null} - Returns the found record object or null if not found.
+@throws {Error} - Throws an error if the file read operation fails.
+*/
 exports.getARecord = async (UUID) => {
   let records;
   try {
@@ -51,6 +72,14 @@ exports.getARecord = async (UUID) => {
   return records.find((record) => record.UUID === UUID);
 };
 
+/**
+
+Utility function to update a specific record in a CSV file.
+@author Minh Hoang Tran - 041016957
+@param {string} UUID - The UUID of the record to update.
+@param {Object} newData - The updated data for the record.
+@throws {Error} - Throws an error if the file write operation fails.
+*/
 exports.updateARecord = async (UUID, newData) => {
   const rawData = await csvToRawString(filePath);
   let index = rawData.findIndex((row) => row.includes(UUID));
@@ -75,7 +104,6 @@ exports.updateARecord = async (UUID, newData) => {
   ];
   rawData[index] = updatedRecord.join(",");
   const updatedData = rawData.join("\n");
-
   try {
     fs.writeFileSync(filePath, updatedData);
   } catch (error) {
@@ -83,6 +111,13 @@ exports.updateARecord = async (UUID, newData) => {
   }
 };
 
+/**
+
+Utility function to delete a specific record from a CSV file.
+@author Minh Hoang Tran - 041016957
+@param {string} UUID - The UUID of the record to delete.
+@throws {Error} - Throws an error if the file write operation fails.
+*/
 exports.deleteARecord = async (UUID) => {
   const rawData = await csvToRawString(filePath);
   let index = rawData.findIndex((row) => row.includes(UUID));
