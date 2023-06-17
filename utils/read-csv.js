@@ -6,7 +6,6 @@ exports.readCSV = async (filepath) => {
        * If failed to read the file, log the error and return
        */
       if (err) {
-        console.error(err);
         return resolve(null);
       }
       /**
@@ -19,13 +18,13 @@ exports.readCSV = async (filepath) => {
        * reate an array of strings by split the contents by the special value "\n"  (new line)
        */
       const rows = contents.split("\n");
-
       /**
        * splice the first row from rows, which contains table labels. Remove the `"` and split the string into
        * an array of string using ","
        */
       const deletedlabels = rows.splice(0, 1);
       const labels = [
+        "UUID",
         "REF_DATE",
         "GEO",
         "DGUID",
@@ -43,9 +42,14 @@ exports.readCSV = async (filepath) => {
         "TERMINATED",
         "DECIMALS",
       ];
+
       /**
        * Loop through all the row data, remove the `"` and split value data using ","
        */
+      if (rows.length === 0) {
+        return resolve([]);
+      }
+
       rows.forEach((rawRowData) => {
         /**
          *  Remove the `"`  in raw data
@@ -80,6 +84,24 @@ exports.readCSV = async (filepath) => {
        */
       console.log("Deleloped by Minh Hoang Tran");
       resolve(finalData);
+    });
+  });
+
+  return await promise;
+};
+
+exports.csvToRawString = async (filepath) => {
+  const promise = new Promise((resolve, reject) => {
+    fs.readFile(filepath, "utf8", (err, contents) => {
+      /**
+       * If failed to read the file, log the error and return
+       */
+      if (err) {
+        return resolve(null);
+      }
+
+      const rows = contents.split("\n");
+      resolve(rows);
     });
   });
 

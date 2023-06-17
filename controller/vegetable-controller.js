@@ -1,5 +1,3 @@
-const { readCSV } = require("../utils/read-csv");
-const url = require("url");
 const VegetableRecord = require("./../models/vegetable-record");
 const { v4 } = require("uuid");
 const {
@@ -11,30 +9,32 @@ const {
 } = require("../utils/query-record");
 
 exports.getAll = async (req, res, next) => {
-  const data = await readCSV("./32100260.csv");
   let page = req.query?.page ? +req.query.page : 1;
-  console.log(page);
-  let newdata;
+  let records;
   try {
-    newdata = getRecords();
+    records = await getRecords();
   } catch (error) {
     newdata = [];
   }
-  const allRecords = [...newdata, ...data];
 
-  return res
-    .json({
-      records: allRecords.slice((page - 1) * 100, (page - 1) * 100 + 100),
-      recordLength: allRecords.length,
-    })
-    .status(201);
+  if (records) {
+    return res
+      .json({
+        records: records.slice((page - 1) * 100, (page - 1) * 100 + 100),
+        recordLength: records.length,
+      })
+      .status(201);
+  }
+  return res.json({ records: [], recordLength: 0 });
 };
 
 exports.addNewRecord = async (req, res, next) => {
   const data = req.body;
+
   let newRecord;
   try {
     newRecord = new VegetableRecord({
+      REF_DATE: new Date(Date.now()).toLocaleDateString(),
       UUID: v4(),
       GEO: data.GEO,
       type_of_product: data.type_of_product,
@@ -46,7 +46,7 @@ exports.addNewRecord = async (req, res, next) => {
     return next(error);
   }
   try {
-    writeRecord(newRecord);
+    await writeRecord(newRecord);
   } catch (error) {
     return next(error);
   }
@@ -57,38 +57,47 @@ exports.getRecord = async (req, res, next) => {
   const { recordId } = req.params;
   let record;
   try {
-    record = getARecord(recordId);
+    record = await getARecord(recordId);
   } catch (error) {
     return next(error);
   }
-  return res.json(record);
-};
 
-exports.getNewRecords = async (req, res, next) => {
-  try {
-    return res.json(getRecords()).status(201);
-  } catch (error) {
-    return next(error);
-  }
+  return res.json(record).status(201);
 };
 
 exports.updateRecord = async (req, res, next) => {
   const { recordId } = req.params;
+  let currentRecord = await getARecord(recordId);
+  if (!currentRecord) {
+    return next(new Error("Not found"));
+  }
+
   const newData = req.body;
-  let updatedRecord;
+  let updatedRecord = new VegetableRecord({
+    UUID: recordId,
+    REF_DATE: currentRecord.REF_DATE,
+    GEO: newData.GEO,
+    type_of_product: newData.type_of_product,
+    VECTOR: newData.VECTOR,
+    COORDINATE: newData.COORDINATE,
+    VALUE: +newData.VALUE,
+  });
   try {
-    updatedRecord = updateARecord(recordId, newData);
+    await updateARecord(recordId, updatedRecord);
   } catch (error) {
     return next(error);
   }
-  return res.json(updatedRecord).status(201);
+  return res.json({ message: "Success" }).status(201);
 };
 
 exports.deleteRecord = async (req, res, next) => {
   const { recordId } = req.params;
-
+  let currentRecord = await getARecord(recordId);
+  if (!currentRecord) {
+    return next(new Error("Not found"));
+  }
   try {
-    deleteARecord(recordId);
+    await deleteARecord(recordId);
   } catch (error) {
     next(error);
   }
