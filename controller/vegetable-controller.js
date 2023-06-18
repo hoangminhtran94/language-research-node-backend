@@ -6,7 +6,7 @@ const {
   getARecord,
   updateARecord,
   deleteARecord,
-} = require("../utils/query-record");
+} = require("../utils/DAO");
 
 /**
 Controller function to get all vegetable records.

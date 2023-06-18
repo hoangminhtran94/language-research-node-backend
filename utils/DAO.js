@@ -10,7 +10,9 @@ Utility function to write a record to a CSV file.
 @throws {Error} - Throws an error if the file write operation fails.
 */
 exports.writeRecord = async (newRecord) => {
+  //Read existed records
   const exitingRecords = fs.readFileSync(filePath, "utf-8");
+  //Create new data as an array of string
   const newData = [
     newRecord.UUID,
     newRecord.REF_DATE,
@@ -30,6 +32,10 @@ exports.writeRecord = async (newRecord) => {
     newRecord.TERMINATED,
     newRecord.DECIMALS,
   ];
+  /**
+   * @author Minh Hoang Tran - 041016957
+   */
+  //join newData array to a string and combine the exsiting records with the new data
   const updatedRecords = exitingRecords + "\n" + newData.join(",");
   try {
     fs.writeFileSync(filePath, updatedRecords);

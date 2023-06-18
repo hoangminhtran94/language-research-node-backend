@@ -13,44 +13,36 @@ exports.readCSV = async (filepath) => {
       if (err) {
         return resolve(null);
       }
-
       // Create an array to store all record data
       const finalData = [];
-
       // Split the contents into an array of strings by the newline character (\n)
       const rows = contents.split("\n");
-
       // Remove the first row from rows, which contains table labels. Remove the double quotes and split the string into an array using comma (,)
       const labels = rows.splice(0, 1)[0].split(",");
-
       // Check if there are no rows in the file
       if (rows.length === 0) {
         return resolve([]);
       }
-
+      /**
+       * @author Minh Hoang Tran - 041016957
+       */
       // Process each row of data
       rows.forEach((rawRowData) => {
         // Remove the double quotes in the raw data
         const rowData = rawRowData.replace(/"/g, "");
-
         // Split the raw string into an array of strings using comma (,)
         const cells = rowData.split(",");
-
         // Create an empty record data object
         let dataObject = {};
-
         // Loop through each cell and map it to the corresponding label using the spread operator
         cells.forEach((cell, index) => {
           dataObject = { ...dataObject, [labels[index]]: cell };
         });
-
         // Push the record data into the finalData array
         finalData.push(dataObject);
       });
-
       // Display a message in the console
       console.log("Developed by Minh Hoang Tran");
-
       // Resolve the promise with the finalData array
       resolve(finalData);
     });
@@ -73,10 +65,8 @@ exports.csvToRawString = async (filepath) => {
       if (err) {
         return resolve(null);
       }
-
       // Split the contents into an array of strings by the newline character (\n)
       const rows = contents.split("\n");
-
       // Resolve the promise with the array of raw string rows
       resolve(rows);
     });

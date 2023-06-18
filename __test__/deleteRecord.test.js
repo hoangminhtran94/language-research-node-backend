@@ -1,11 +1,11 @@
 const { deleteRecord } = require("../controller/vegetable-controller");
-const { getARecord, deleteARecord } = require("../utils/query-record");
+const { getARecord, deleteARecord } = require("../utils/DAO");
 
 /**
- * Mocks the "getARecord" and "deleteARecord" functions from "../utils/query-record" module.
+ * Mocks the "getARecord" and "deleteARecord" functions from "../utils/DAO" module.
  * @author Minh Hoang Tran - 041016957
  */
-jest.mock("../utils/query-record", () => ({
+jest.mock("../utils/DAO", () => ({
   getARecord: jest.fn(),
   deleteARecord: jest.fn(),
 }));
@@ -14,11 +14,11 @@ jest.mock("../utils/query-record", () => ({
  * Test suite for the "deleteRecord" function.
  * @author Minh Hoang Tran - 041016957
  */
-describe("deleteRecord", () => {
+describe("Testing deleteRecord - Programmed by Minh Hoang Tran", () => {
   /**
    * Test case: should remove a record from the sequential data structure.
    */
-  it("should remove a record from the sequential data structure", async () => {
+  it("should remove a record from the sequential data structure - Programmed by Minh Hoang Tran", async () => {
     /**
      * Valid record ID to be used in the test.
      * @type {string}
@@ -66,7 +66,7 @@ describe("deleteRecord", () => {
   /**
    * Test case: should return an error if the record is not found.
    */
-  it("should return an error if the record is not found", async () => {
+  it("should return an error if the record is not found - Programmed by Minh Hoang Tran", async () => {
     /**
      * Non-existent record ID to be used in the test.
      * @type {string}
