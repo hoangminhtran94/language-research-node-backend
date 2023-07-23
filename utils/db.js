@@ -1,5 +1,4 @@
 const { PrismaClient } = require("@prisma/client");
-
 const globalForPrisma = global;
 
 const prisma =
