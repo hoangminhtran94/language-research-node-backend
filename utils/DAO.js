@@ -17,7 +17,7 @@ exports.writeRecord = async (newRecord) => {
   //join newData array to a string and combine the exsiting records with the new data
 
   try {
-    await prisma.vegetableRecord.create({ data: { ...newRecord } });
+    return await prisma.vegetableRecord.create({ data: { ...newRecord } });
   } catch (error) {
     throw error;
   }

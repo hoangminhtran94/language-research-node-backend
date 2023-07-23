@@ -7,6 +7,7 @@ const {
   updateARecord,
   deleteARecord,
 } = require("../utils/DAO");
+const prisma = require("../utils/db");
 
 /**
 Controller function to get all vegetable records.
@@ -30,6 +31,7 @@ exports.getAll = async (req, res, next) => {
 
   if (records) {
     // If records are available, return a JSON response with a subset of records based on the requested page
+    console.log(records[0]);
     return res.status(201).json({
       records: records.slice((page - 1) * 100, (page - 1) * 100 + 100),
       recordLength: records.length,

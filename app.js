@@ -21,8 +21,6 @@ app.use(corsHandler);
 app.use(bodyParser.json());
 // Parse URL-encoded bodies
 app.use(bodyParser.urlencoded({ extended: false }));
-// Custom middleware to check if the record file exists
-app.use(checkRecordFile);
 // Mount the vegetableRouter at the "/api/vegetable" route
 app.use("/api/vegetable", vegetableRouter);
 // Error handling middleware
