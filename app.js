@@ -14,7 +14,6 @@ const errorHandler = require("./middleware/error-handler");
 const checkRecordFile = require("./middleware/check-record-file");
 const vegetableRouter = require("./routes/vegetable-route");
 const bodyParser = require("body-parser");
-
 const app = express();
 // Set up CORS headers
 app.use(corsHandler);

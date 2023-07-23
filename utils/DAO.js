@@ -1,4 +1,5 @@
 const fs = require("fs");
+const prisma = require("../utils/db");
 const { readCSV, csvToRawString } = require("./read-csv");
 const filePath = "./new-record.csv";
 
@@ -10,35 +11,13 @@ Utility function to write a record to a CSV file.
 @throws {Error} - Throws an error if the file write operation fails.
 */
 exports.writeRecord = async (newRecord) => {
-  //Read existed records
-  const exitingRecords = fs.readFileSync(filePath, "utf-8");
-  //Create new data as an array of string
-  const newData = [
-    newRecord.UUID,
-    newRecord.REF_DATE,
-    newRecord.GEO,
-    newRecord.DGUID,
-    newRecord.type_of_product,
-    newRecord.type_of_storage,
-    newRecord.UOM,
-    newRecord.UOM_ID,
-    newRecord.SCALAR_FACTOR,
-    newRecord.SCALAR_ID,
-    newRecord.VECTOR,
-    newRecord.COORDINATE,
-    newRecord.VALUE,
-    newRecord.STATUS,
-    newRecord.SYMBOL,
-    newRecord.TERMINATED,
-    newRecord.DECIMALS,
-  ];
   /**
    * @author Minh Hoang Tran - 041016957
    */
   //join newData array to a string and combine the exsiting records with the new data
-  const updatedRecords = exitingRecords + "\n" + newData.join(",");
+
   try {
-    fs.writeFileSync(filePath, updatedRecords);
+    await prisma.vegetableRecord.create({ data: { ...newRecord } });
   } catch (error) {
     throw error;
   }
@@ -54,7 +33,9 @@ Utility function to retrieve all records from a CSV file.
 exports.getRecords = async () => {
   let records;
   try {
-    records = await readCSV(filePath);
+    records = await prisma.vegetableRecord.findMany({
+      orderBy: { REF_DATE: "desc" },
+    });
   } catch (error) {
     throw error;
   }
@@ -69,13 +50,7 @@ Utility function to retrieve a specific record by its UUID from a CSV file.
 @throws {Error} - Throws an error if the file read operation fails.
 */
 exports.getARecord = async (UUID) => {
-  let records;
-  try {
-    records = await readCSV(filePath);
-  } catch (error) {
-    throw error;
-  }
-  return records.find((record) => record.UUID === UUID);
+  return prisma.vegetableRecord.findFirstOrThrow({ where: { UUID } });
 };
 
 /**
@@ -87,31 +62,11 @@ Utility function to update a specific record in a CSV file.
 @throws {Error} - Throws an error if the file write operation fails.
 */
 exports.updateARecord = async (UUID, newData) => {
-  const rawData = await csvToRawString(filePath);
-  let index = rawData.findIndex((row) => row.includes(UUID));
-  const updatedRecord = [
-    newData.UUID,
-    newData.REF_DATE,
-    newData.GEO,
-    newData.DGUID,
-    newData.type_of_product,
-    newData.type_of_storage,
-    newData.UOM,
-    newData.UOM_ID,
-    newData.SCALAR_FACTOR,
-    newData.SCALAR_ID,
-    newData.VECTOR,
-    newData.COORDINATE,
-    newData.VALUE,
-    newData.STATUS,
-    newData.SYMBOL,
-    newData.TERMINATED,
-    newData.DECIMALS,
-  ];
-  rawData[index] = updatedRecord.join(",");
-  const updatedData = rawData.join("\n");
   try {
-    fs.writeFileSync(filePath, updatedData);
+    await prisma.vegetableRecord.update({
+      where: { UUID },
+      data: { ...newData },
+    });
   } catch (error) {
     throw error;
   }
@@ -125,12 +80,8 @@ Utility function to delete a specific record from a CSV file.
 @throws {Error} - Throws an error if the file write operation fails.
 */
 exports.deleteARecord = async (UUID) => {
-  const rawData = await csvToRawString(filePath);
-  let index = rawData.findIndex((row) => row.includes(UUID));
-  rawData.splice(index, 1);
-  const updatedData = rawData.join("\n");
   try {
-    fs.writeFileSync(filePath, updatedData);
+    await prisma.vegetableRecord.delete({ where: { UUID } });
   } catch (error) {
     throw error;
   }

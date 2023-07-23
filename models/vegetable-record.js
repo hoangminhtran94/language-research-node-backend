@@ -18,17 +18,8 @@ class VegetableRecord {
   @param {Object} data - The data object containing the record properties.
   @author Minh Hoang Tran - 041016957
   */
-  constructor({
-    UUID,
-    GEO,
-    type_of_product,
-    VECTOR,
-    COORDINATE,
-    VALUE,
-    REF_DATE,
-  }) {
+  constructor({ GEO, type_of_product, VECTOR, COORDINATE, VALUE, REF_DATE }) {
     this.REF_DATE = REF_DATE;
-    this.UUID = UUID;
     this.GEO = GEO;
     this.type_of_product = type_of_product;
     this.VECTOR = VECTOR.startsWith("v") ? VECTOR : "v" + VECTOR;

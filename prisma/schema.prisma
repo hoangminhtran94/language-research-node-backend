@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model VegetableRecord {
+  UUID            String @id @default(uuid())
+  GEO             String
+  type_of_product String
+  VECTOR          String
+  COORDINATE      String
+  VALUE           Int
+  REF_DATE        String
+  DGUID           String @default("")
+  type_of_storage String @default("Cold and common storage")
+  UOM             String @default("UOM")
+  UOM_ID          Int    @default(288)
+  SCALAR_FACTOR   String @default("units")
+  SCALAR_ID       Int    @default(0)
+  STATUS          String @default("")
+  SYMBOL          String @default("")
+  TERMINATED      String @default("")
+  DECIMALS        Int    @default(0)
+}

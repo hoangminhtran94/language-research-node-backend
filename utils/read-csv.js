@@ -18,7 +18,23 @@ exports.readCSV = async (filepath) => {
       // Split the contents into an array of strings by the newline character (\n)
       const rows = contents.split("\n");
       // Remove the first row from rows, which contains table labels. Remove the double quotes and split the string into an array using comma (,)
-      const labels = rows.splice(0, 1)[0].split(",");
+      const removeInvisibleCharacters = (str) => {
+        // Regular expression to match any invisible character (including line breaks and tabs)
+        const invisibleCharRegex = /[\r\n\t\v\f\s]/g;
+
+        // Use the replace() method to remove all invisible characters
+        const cleanedString = str.replace(invisibleCharRegex, "");
+
+        return cleanedString;
+      };
+
+      const labels = removeInvisibleCharacters(
+        rows
+          .splice(0, 1)[0]
+          .replace(/"/g, "")
+          .replace("Type of product", "type_of_product")
+          .replace("Type of storage", "type_of_storage")
+      ).split(",");
       // Check if there are no rows in the file
       if (rows.length === 0) {
         return resolve([]);
@@ -41,10 +57,11 @@ exports.readCSV = async (filepath) => {
         // Push the record data into the finalData array
         finalData.push(dataObject);
       });
+
       // Display a message in the console
       console.log("Developed by Minh Hoang Tran");
       // Resolve the promise with the finalData array
-      resolve(finalData);
+      resolve(finalData.filter((data) => Object.keys(data).length >= 16));
     });
   });
 

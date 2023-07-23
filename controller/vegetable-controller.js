@@ -126,7 +126,6 @@ exports.updateRecord = async (req, res, next) => {
 
   // Create an updated record with the provided data
   let updatedRecord = new VegetableRecord({
-    UUID: recordId,
     REF_DATE: currentRecord.REF_DATE,
     GEO: newData.GEO,
     type_of_product: newData.type_of_product,
