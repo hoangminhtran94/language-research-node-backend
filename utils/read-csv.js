@@ -6,6 +6,17 @@ const fs = require("fs");
  * @returns {Promise<Array<Object>>} - A promise that resolves to an array of record objects.
  * @throws {Error} - Throws an error if the file read operation fails.
  */
+
+const removeInvisibleCharacters = (str) => {
+  // Regular expression to match any invisible character (including line breaks and tabs)
+  const invisibleCharRegex = /[\r\n\t\v\f\s]/g;
+
+  // Use the replace() method to remove all invisible characters
+  const cleanedString = str.replace(invisibleCharRegex, "");
+
+  return cleanedString;
+};
+
 exports.readCSV = async (filepath) => {
   const promise = new Promise((resolve, reject) => {
     fs.readFile(filepath, "utf8", (err, contents) => {
@@ -18,16 +29,6 @@ exports.readCSV = async (filepath) => {
       // Split the contents into an array of strings by the newline character (\n)
       const rows = contents.split("\n");
       // Remove the first row from rows, which contains table labels. Remove the double quotes and split the string into an array using comma (,)
-      const removeInvisibleCharacters = (str) => {
-        // Regular expression to match any invisible character (including line breaks and tabs)
-        const invisibleCharRegex = /[\r\n\t\v\f\s]/g;
-
-        // Use the replace() method to remove all invisible characters
-        const cleanedString = str.replace(invisibleCharRegex, "");
-
-        return cleanedString;
-      };
-
       const labels = removeInvisibleCharacters(
         rows
           .splice(0, 1)[0]

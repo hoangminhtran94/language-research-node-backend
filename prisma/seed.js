@@ -1,11 +1,25 @@
+/**
+ * @file Import data from CSV file into the database using Prisma.
+ * @description This script reads data from a CSV file and inserts it into the database using Prisma.
+ * @author Minh Hoang Tran
+ * @studentNumber 041016957
+ */
+
 const prisma = require("../utils/db");
 const { readCSV } = require("../utils/read-csv");
-async function main() {
-  const csvData = await readCSV("32100260.csv");
-  const promises = [];
 
+/**
+ * Function to import data from a CSV file into the database using Prisma.
+ * @async
+ * @function main
+ * @returns {Promise<void>} - A Promise that resolves when the data import is completed or rejects if an error occurs.
+ */
+async function main() {
   try {
-    //user
+    // Read data from the CSV file
+    const csvData = await readCSV("32100260.csv");
+
+    // Convert and insert data into the database using Prisma
     await prisma.vegetableRecord.createMany({
       data: csvData.map((data) => ({
         ...data,
@@ -18,10 +32,12 @@ async function main() {
   } catch (error) {
     console.error(error);
   } finally {
+    // Disconnect the Prisma client after data import is completed or an error occurs
     await prisma.$disconnect();
   }
 }
 
+// Call the main function to import data from the CSV file
 main()
   .then(async () => {
     await prisma.$disconnect();
