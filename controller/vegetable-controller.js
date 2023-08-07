@@ -8,7 +8,6 @@ const {
   deleteARecord,
 } = require("../utils/DAO");
 const prisma = require("../utils/db");
-
 /**
 Controller function to get all vegetable records.
 @author Minh Hoang Tran - 041016957
@@ -20,13 +19,46 @@ Controller function to get all vegetable records.
 exports.getAll = async (req, res, next) => {
   // Retrieve the requested page from the query parameter, defaulting to 1 if not provided
   let page = req.query?.page ? +req.query.page : 1;
+  //Get the search params from the request
+  const search = req.query?.search;
+
   let records;
-  try {
-    // Get all vegetable records
-    records = await getRecords();
-  } catch (error) {
-    // Handle errors by setting records to an empty array
-    records = [];
+  //If there is the search params available, query the database for using the search value
+  if (search) {
+    //Decode the search params if there are special characters
+    const decode = decodeURI(search);
+    //Create the search conditions
+    const conditions = [
+      { GEO: { contains: decode } },
+      { type_of_product: { contains: decode } },
+      { type_of_storage: { contains: decode } },
+      { VECTOR: { contains: decode } },
+      { COORDINATE: { contains: decode } },
+      { REF_DATE: { contains: decode } },
+    ];
+    //If the search value is a number, add condition to search for the value
+    if (typeof +search === "number") {
+      conditions.push({ VALUE: { equals: +search } });
+    }
+    //Query database for the records that satisfied the conditions
+    try {
+      records = await prisma.vegetableRecord.findMany({
+        where: {
+          OR: conditions,
+        },
+      });
+    } catch (error) {
+      //if there is any error, return an empty array
+      records = [];
+    }
+  } else {
+    try {
+      // Get all vegetable records
+      records = await getRecords();
+    } catch (error) {
+      // Handle errors by setting records to an empty array
+      records = [];
+    }
   }
 
   if (records) {
