@@ -21,7 +21,6 @@ exports.getAll = async (req, res, next) => {
   let page = req.query?.page ? +req.query.page : 1;
   //Get the search params from the request
   const search = req.query?.search;
-
   let records;
   //If there is the search params available, query the database for using the search value
   if (search) {
@@ -37,8 +36,9 @@ exports.getAll = async (req, res, next) => {
       { REF_DATE: { contains: decode } },
     ];
     //If the search value is a number, add condition to search for the value
-    if (typeof +search === "number") {
-      conditions.push({ VALUE: { equals: +search } });
+
+    if (!isNaN(+decode)) {
+      conditions.push({ VALUE: { equals: +decode } });
     }
     //Query database for the records that satisfied the conditions
     try {
@@ -48,6 +48,7 @@ exports.getAll = async (req, res, next) => {
         },
       });
     } catch (error) {
+      console.log(error);
       //if there is any error, return an empty array
       records = [];
     }
